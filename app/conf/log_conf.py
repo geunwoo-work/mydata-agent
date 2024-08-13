@@ -24,8 +24,8 @@ def get_logger(name, level=logging.INFO, handlers=None):
 # 로깅 설정
 def setup_loggers():
     # 개별 로거 설정
-    logger_fastapi = get_logger('fastapi', handlers=[create_file_handler('fastapi.log')])
-    logger_vector_store = get_logger('vector_store', handlers=[create_file_handler('vector_store.log')])
+    logger_fastapi = get_logger('fastapi', handlers=[create_file_handler('log/fastapi.log')])
+    logger_vector_store = get_logger('vector_store', handlers=[create_file_handler('log/vector_store.log')])
 
     # 로거 등록
     return {
