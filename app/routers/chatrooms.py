@@ -4,7 +4,8 @@ from conf.log_conf import loggers
 
 chatrooms = APIRouter(prefix='/chatrooms')
 
-logger = loggers['fastapi']
+log = loggers['fastapi']
+
 
 class ChatroomMessage(BaseModel):
     message: str = Field(example="토큰이 중복 발급되었을 경우 어떻게 되나요?")
