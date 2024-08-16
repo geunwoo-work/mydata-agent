@@ -26,11 +26,13 @@ def setup_loggers():
     # 개별 로거 설정
     logger_fastapi = get_logger('fastapi', handlers=[create_file_handler('log/fastapi.log')])
     logger_vector_store = get_logger('vector_store', handlers=[create_file_handler('log/vector_store.log')])
+    logger_llm = get_logger('llm', handlers=[create_file_handler('log/llm.log')])
 
     # 로거 등록
     return {
         'fastapi': logger_fastapi,
         'vector_store': logger_vector_store,
+        'logger_llm': logger_llm,
     }
 
 loggers = setup_loggers()

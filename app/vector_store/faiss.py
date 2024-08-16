@@ -1,6 +1,4 @@
-import asyncio
 import os
-from langchain_community.document_loaders import PyPDFLoader
 from langchain_openai.embeddings import OpenAIEmbeddings
 from langchain_community.vectorstores import FAISS
 from langchain.text_splitter import RecursiveCharacterTextSplitter
@@ -13,34 +11,7 @@ log = loggers['vector_store']
 class FaissStore(VectorStore):
     def __init__(self):
         super().__init__()
-        self._vector_store = None
-        self._building_store = False
-        self._path = None
 
-
-    async def _load_files(self, file_path: str, extension: str):
-        if extension == 'pdf':
-            loader = PyPDFLoader(file_path)
-        else: # TODO: add other loaders
-            log.info(f"{extension} extension does not support!")
-            return []
-        documents = await loader.aload()
-        return documents
-
-    async def _load_files_from_directory(self, directory_path: str, extension: str) -> list:
-        files = self._get_files_from_directory(directory_path, extension)
-        if len(files) == 0:
-            log.error(f"No any {extension} files under this directory: {directory_path}")
-            raise FileNotFoundError(f"No any {extension} files under this directory: {directory_path}")
-        
-        tasks = [self._load_files(file_path, extension) for file_path in files]
-        task_results = await asyncio.gather(*tasks)
-
-        combined_documents = list()
-        for documents in task_results:
-            combined_documents.extend(documents)
-        return combined_documents
-    
     async def _create_vector_store(self, directory_path: str, extension: str, embedding_model: str,
                                     chunk_size: int, chunk_overlap: int):
         combined_documents = await self._load_files_from_directory(directory_path, extension)
