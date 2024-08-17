@@ -34,7 +34,7 @@ class FaissStore(VectorStore):
         return db
     
     async def initialize(self, directory_path: str, extension: str, embedding_model: str,
-                        chunk_size: int, chunk_overlap: int):
+                        chunk_size: int, chunk_overlap: int) -> None:
         if self._vector_store is not None:
             return
         self._building_store = True
@@ -51,7 +51,7 @@ class FaissStore(VectorStore):
         self._building_store = False
 
     async def renew_vector_store(self, directory_path: str, extension: str, embedding_model: str,
-                        chunk_size: int, chunk_overlap: int):
+                        chunk_size: int, chunk_overlap: int) -> None:
         self._building_store = True
         self._path = f"{directory_path}/faiss/{extension}_{embedding_model}_{chunk_size}_{chunk_overlap}"
         db = await self._create_vector_store(directory_path, extension, embedding_model,
@@ -62,7 +62,7 @@ class FaissStore(VectorStore):
     def get_vector_store(self):
         return self._vector_store
 
-    async def retrieve(self, query:str, k_num: int = 3):
+    async def retrieve(self, query:str, k_num: int = 3) -> list:
         if self._building_store:
             raise BuildingStoreException("Building vector store work not completed!")
         elif self._vector_store is None:

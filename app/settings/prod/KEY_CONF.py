@@ -8,3 +8,4 @@ from settings.base.KEY_CONF import *
 
 # setting values 
 DATA_PATH = "data"
+TEST_DATA_PATH = "data"
