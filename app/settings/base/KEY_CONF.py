@@ -6,6 +6,7 @@
 # OPENAI
 OPENAI_API_KEY = ""
 EMBEDDING_MODEL = "text-embedding-3-small"
+OPENAI_MODEL = "gpt-3.5-turbo-0125"
 
 # setting values 
 DATA_PATH = "data/test"
