@@ -24,6 +24,10 @@ class VectorStore(ABC):
     def get_vector_store(self):
         pass
 
+    @abstractmethod
+    async def retrieve(self, query):
+        pass
+
     @classmethod
     def _get_files_from_directory(cls, directory_path: str, extension: str = None) -> list:
         file_list = list()
