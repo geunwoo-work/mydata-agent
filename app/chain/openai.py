@@ -2,10 +2,12 @@ from langchain_openai import ChatOpenAI
 from langchain_core.prompts import ChatPromptTemplate
 from langchain_core.output_parsers import StrOutputParser
 from chain.abstract_chain import ChainModel, log
+from utils.key_conf import KEY_CONF
 
-class OpenAiChain(ChainModel):
-    def __init__(self, model_name, temperature: int = 0):
-        super().__init__(model_name)
+class OpenaiChain(ChainModel):
+    def __init__(self, model_name: str = KEY_CONF.DEFAULT_OPENAI_MODEL, temperature: int = 0):
+        super().__init__()
+        self.model_name = model_name
         self.temperature = temperature
     
     def _make_chain(self, system_message: str, context: str, chat_history:list = []):

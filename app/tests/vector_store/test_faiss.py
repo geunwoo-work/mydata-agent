@@ -4,8 +4,9 @@ import pytest
 from vector_store import VECTOR_STORES
 from utils.key_conf import KEY_CONF
 from utils.exception import InitializationException
+from utils.enums import VectorStoreType
 
-faiss = VECTOR_STORES['FaissStore']
+faiss = VECTOR_STORES[VectorStoreType.FAISS]
 initialized_success = False
 
 @pytest.mark.run(order=1)

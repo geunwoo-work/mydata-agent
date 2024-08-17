@@ -1,9 +1,10 @@
 import pytest
-from chain.open_ai import OpenAiChain
+from chain import CHAIN_STORES
 from utils.key_conf import KEY_CONF
+from utils.enums import LargeLanguageModelType
 from prompt.en import MARKDOWN_SYSTEM_PROMPT, MARKDOWN_CONTEXT_PROMPT
 
-chain = OpenAiChain(KEY_CONF.OPENAI_MODEL)
+chain = CHAIN_STORES[LargeLanguageModelType.OPENAI]
 
 @pytest.mark.asyncio
 async def test_invoke():

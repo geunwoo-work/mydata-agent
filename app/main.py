@@ -2,8 +2,9 @@ from contextlib import asynccontextmanager
 from fastapi import FastAPI
 from routers.chatrooms import chatrooms
 from vector_store import VECTOR_STORES
-from chain.open_ai import OpenAiChain
+from chain import CHAIN_STORES
 from utils.key_conf import KEY_CONF
+from utils.enums import VectorStoreType
 from prompt.en import MARKDOWN_SYSTEM_PROMPT, MARKDOWN_CONTEXT_PROMPT
 import os
 
@@ -13,9 +14,8 @@ async def start():
     embedding_model = KEY_CONF.EMBEDDING_MODEL
     chunk_size = KEY_CONF.CHUNK_SIZE
     chunk_overlap = KEY_CONF.CHUNK_OVERLAP
-    faiss = VECTOR_STORES['FaissStore']
+    faiss = VECTOR_STORES[VectorStoreType.FAISS]
     await faiss.initialize(data_path, extension, embedding_model, chunk_size, chunk_overlap)
-    # open_ai_model = KEY_CONF.OPENAI_MODEL
     # chain = OpenAiChain(open_ai_model)
     # system_message = MARKDOWN_SYSTEM_PROMPT
     # context_prompt = MARKDOWN_CONTEXT_PROMPT
