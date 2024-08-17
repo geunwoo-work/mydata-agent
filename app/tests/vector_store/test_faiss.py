@@ -1,7 +1,7 @@
 import os
 import shutil
 import pytest
-from app.vector_store.faiss import FaissStore
+from vector_store.faiss import FaissStore
 from utils.key_conf import KEY_CONF
 from utils.exception import InitializationException
 
