@@ -1,11 +1,11 @@
 import os
 import shutil
 import pytest
-from vector_store.faiss import FaissStore
+from vector_store import VECTOR_STORES
 from utils.key_conf import KEY_CONF
 from utils.exception import InitializationException
 
-faiss = FaissStore()
+faiss = VECTOR_STORES['FaissStore']
 initialized_success = False
 
 @pytest.mark.run(order=1)
