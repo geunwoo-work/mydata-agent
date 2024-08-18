@@ -5,7 +5,7 @@ from vector_store import VECTOR_STORES
 from chain import CHAIN_STORES
 from utils.key_conf import KEY_CONF
 from utils.enums import VectorStoreType
-from prompt.en import MARKDOWN_SYSTEM_PROMPT, MARKDOWN_CONTEXT_PROMPT
+from prompt.en import MARKDOWN_QUERY_SYSTEM_PROMPT, MARKDOWN_CONTEXT_PROMPT
 import os
 
 async def start():

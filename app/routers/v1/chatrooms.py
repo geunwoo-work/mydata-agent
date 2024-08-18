@@ -6,7 +6,11 @@ from utils.enums import VectorStoreType
 from vector_store import VECTOR_STORES
 from chain import CHAIN_STORES
 from mock_db.api import insert_msg, get_chatroom_msg
-from prompt.en import MARKDOWN_SYSTEM_PROMPT, MARKDOWN_CONTEXT_PROMPT
+from prompt.en import (
+    MARKDOWN_QUERY_SYSTEM_PROMPT,
+    MARKDOWN_SUMMARY_SYSTEM_PROMPT,
+    MARKDOWN_CONTEXT_PROMPT
+)
 from utils.exception import BuildingStoreException, InitializationException
 
 
@@ -86,13 +90,27 @@ class QueryMessageResponse(BaseModel):
         }
     }
 
+async def summarize_context(chain, context_list: list, query: str):
+    summarized_context_list = list()
+    try:
+        for item in context_list:
+            summarized_context = await chain.invoke(
+                MARKDOWN_SUMMARY_SYSTEM_PROMPT,
+                MARKDOWN_CONTEXT_PROMPT + item,
+                query,
+            )
+            summarized_context_list.append(summarized_context)
+    except Exception as e:
+        log.info(e)
+        raise HTTPException(status_code=500, detail="Internal Server Error")
+    return summarized_context_list
+
 @chatrooms.post('/{chatroom_id}/messages', tags=['chatrooms'], response_model=QueryMessageResponse)
 async def create_chatroom_message(chatroom_id: int = Path(...),
                                 query_message: QueryMessage = Body(...)) -> QueryMessageResponse:
     try:
         chain = CHAIN_STORES[query_message.llm_type]
         chain.set_model_name(query_message.llm_model_name)
-        system_message = MARKDOWN_SYSTEM_PROMPT
         context = ""
         context_list = await faiss.retrieve(query_message.message)
     except BuildingStoreException as e:
@@ -108,14 +126,22 @@ async def create_chatroom_message(chatroom_id: int = Path(...),
         log.error(traceback.format_exc())
         raise HTTPException(status_code=500, detail="Internal Server Error")
 
+    model_token_limit = chain.get_model_token_limit()
+    if chain.num_tokens_from_message(query_message.message) > model_token_limit // 3:
+        raise HTTPException(status_code=400, detail="Query message is too long! Please split your question or use a different model.")
     if len(context_list) > 0:
+        context_total_token = 0
+        for item in context_list:
+            context_total_token += chain.num_tokens_from_message(item)
+        if context_total_token > model_token_limit // 2:
+            context_list = await summarize_context(chain, context_list, query_message.message)
         formatted_context = [f"{i+1}. {item}" for i, item in enumerate(context_list)]
         context = MARKDOWN_CONTEXT_PROMPT + "  ".join(formatted_context)
     chat_history = get_chatroom_msg(chatroom_id)
 
     try:
         chain_result = await chain.invoke(
-            system_message,
+            MARKDOWN_QUERY_SYSTEM_PROMPT,
             context,
             query_message.message,
             chat_history
