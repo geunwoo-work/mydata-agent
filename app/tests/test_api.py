@@ -7,7 +7,7 @@ def test_create_chatroom_message_with_correct_input():
     request_payload = {
         "message": "거점중계기관이 뭐야?",
         "llm_type": "OpenaiChain",
-        "llm_model_name": "gpt-3.5-turbo-0125"
+        "llm_model_name": "gpt-4o"
     }
 
     response = client.post("/v1/chatrooms/1/messages", json=request_payload)
@@ -21,7 +21,7 @@ def test_create_chatroom_message_with_wrong_llm_type():
     request_payload = {
         "message": "거점중계기관이 뭐야?",
         "llm_type": "OpenAiChain",
-        "llm_model_name": "gpt-3.5-turbo-0125"
+        "llm_model_name": "gpt-4o"
     }
 
     response = client.post("/v1/chatrooms/1/messages", json=request_payload)

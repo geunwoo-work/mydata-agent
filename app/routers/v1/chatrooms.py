@@ -69,7 +69,7 @@ class QueryMessage(BaseModel):
                 {
                     "message": "거점중계기관이 뭐야?",
                     "llm_type": "OpenaiChain",
-                    "llm_model_name": "gpt-3.5-turbo-0125",
+                    "llm_model_name": "gpt-4o",
                 }
             ]
         }
