@@ -10,6 +10,6 @@ def insert_msg(chatroom_id:int, user_type:str, msg: str):
         chat_dict[chatroom_id] = chat_list
 
 def get_chatroom_msg(chatroom_id:int) -> list:
-    if chatroom_id in chat_dict:
+    if chatroom_id not in chat_dict:
         return []
     return chat_dict[chatroom_id]
